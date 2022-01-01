@@ -19,9 +19,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.PlainDocument;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
@@ -60,10 +57,7 @@ public class App {
 		initialize();
 		
 		sql = new SQL_Handler();
-		
-		
-		
-			
+	
 	}
 	private void initialize() {
 		frame = new JFrame();
@@ -77,10 +71,6 @@ public class App {
 		int screenWidth = screenSize.width / 2;
 		
 		
-		
-		
-		 
-		 
 		frame.setBounds(screenWidth - windowWidth / 2,  screenHeight - windowHeight / 2, windowWidth, windowHeight);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
@@ -93,7 +83,7 @@ public class App {
 		tabbedPane.addTab("Genre", null, genrePanel, "get list of games from selected genre");
 		genrePanel.setLayout(null);
 		
-		JPanel similarityPanel = new JPanel();
+		JPanel similarityPanel = new SimilarityPanel();
 		tabbedPane.addTab("Similiarity", null, similarityPanel, "get list of games similiar to your taste ");
 		similarityPanel.setLayout(null);
 		
