@@ -39,7 +39,7 @@ public class SQL_Handler {
         }
     }
 	
-	public  ResultSet retrieveData(String query) throws SQLException{
+	public ResultSet retrieveData(String query) throws SQLException{
 	      //Registering the Driver
 	      //DriverManager.registerDriver(new com.mysql.jdbc.Driver());
 	      //Getting the connection
