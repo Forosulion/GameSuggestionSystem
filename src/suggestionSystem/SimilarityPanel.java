@@ -2,6 +2,7 @@ package suggestionSystem;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
@@ -17,12 +18,15 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 
 public class SimilarityPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private SQL_Handler sql_handler;
 	private ArrayList<String> usernames;
 	private ArrayList<Integer> uids;
+	
+	private JList<String> gamesList;
 	
 	public SimilarityPanel() {
 		super();
@@ -44,6 +48,14 @@ public class SimilarityPanel extends JPanel {
 		recommendButton.setBounds(120, 32, 131, 23);
 		this.add(recommendButton);
 		recommendButton.setVisible(true);
+		
+		gamesList = new JList<String>();
+	    gamesList.setLayoutOrientation(JList.VERTICAL);
+	    gamesList.setBounds(10, 70, 301, 200);
+	    gamesList.setVisibleRowCount(10);
+	    gamesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    this.add(gamesList);
+	    gamesList.setVisible(true);
 		
 		recommendButton.addActionListener(new ActionListener() {
 			@Override
@@ -136,6 +148,13 @@ public class SimilarityPanel extends JPanel {
 			for(Map.Entry<String, Float> entry : sorted_list) {
 				System.out.println("Rating to " + entry.getKey() + ":  " + entry.getValue());
 			}
+			
+			int list_size = sorted_list.size();
+			String[] list_arr = new String[list_size];
+			for(int i = list_size - 1; i > list_size - 6; i--) {
+				list_arr[list_size - 1 - i] = sorted_list.get(i).getKey();
+			}
+			this.gamesList.setListData(list_arr);
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
