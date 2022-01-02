@@ -3,11 +3,14 @@ package suggestionSystem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -65,8 +68,11 @@ public class SimilarityPanel extends JPanel {
 					+ "from usergamedata as table1, usergamedata as table2 "
 					+ "where table1.uid == " + user_id + " and table2.uid != table1.uid and table1.title == table2.title;");
 			
+			// Getting the necessarry data to calculate ratings.
+			RatingAdjuster.AddGameHoursByUID(user_id); 
 			//corr_gd_map.put(user_id, user_gd);
 			GameData curr_gd = null;
+			// Reading users data on correlated games.
 			while(correlatedGamesRs.next()) {
 				int target_uid = correlatedGamesRs.getInt("t_uid");
 				String game_title = correlatedGamesRs.getString("title");
@@ -87,12 +93,50 @@ public class SimilarityPanel extends JPanel {
 				user_gd.addGameData(game_title, user_playtime);
 			}
 			
+			System.out.println(user_gd.toString());
+			System.out.println("Similarity of UID " + user_gd.getUserID() + ": " + user_gd.getSimilarityToUser(user_gd) + '\n');
+			GameData max_similar_data = curr_gd;
 			for(GameData gd : corr_gd_map.values()) {
 				System.out.println(gd.toString());
+				float similarity = gd.getSimilarityToUser(user_gd);
+				if(max_similar_data != null && similarity > max_similar_data.getSimilarityToUser(user_gd)) {
+					max_similar_data = gd;
+				}
+				System.out.println("Similarity of UID " + gd.getUserID() + ": " + similarity + '\n');
 			}
 			
-			// GameData gd = new GameData(user_id);
-			// gd.setCenteredRatings(sql_handler);
+			System.out.println("Max similar user is UID " + max_similar_data.getUserID() + ": " + max_similar_data.getSimilarityToUser(user_gd));
+			
+			// Now to predict the ratings for the selected user we need to get the union of all the games played by the users.
+			ResultSet allPlayedGamesRs = this.sql_handler.retrieveData("select distinct title from usergamedata where title not in (select t2.title from usergamedata as t2 where t2.uid == " + user_id + ")");
+			
+			Map<String, Float> predictedRatings = new HashMap<String, Float>();
+			while(allPlayedGamesRs.next()) {
+				String gameTitle = allPlayedGamesRs.getString("title");
+				float dividend = 0;
+				float divisor = 0;
+				int sim_counter = 0;
+				for(GameData gd : corr_gd_map.values()) {
+					float rating = gd.getPersonalData().getRating(gameTitle);
+					if(rating > 0) {
+						//System.out.println("User similarity: " + gd.getSimilarityToUser(user_gd) + " -- Rating: " + rating);
+						dividend += gd.getSimilarityToUser(user_gd) * rating;
+						divisor += gd.getSimilarityToUser(user_gd);
+						sim_counter++;
+					}
+				}
+				if(sim_counter > 1) {
+					float predictedRating = (divisor == 0 ? 0 : (dividend / divisor));
+					predictedRatings.put(gameTitle, predictedRating);
+				}
+			}
+			ArrayList<Map.Entry<String, Float>> sorted_list = new ArrayList<>(predictedRatings.entrySet());
+			sorted_list.sort(Map.Entry.comparingByValue());
+			
+			for(Map.Entry<String, Float> entry : sorted_list) {
+				System.out.println("Rating to " + entry.getKey() + ":  " + entry.getValue());
+			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

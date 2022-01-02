@@ -45,7 +45,7 @@ public class SQL_Handler {
 	      //Getting the connection
 	      String mysqlUrl = "jdbc:sqlite:" + "data.sqlite";
 	      Connection con = DriverManager.getConnection(mysqlUrl);
-	      System.out.println("Connection established......");
+	      //System.out.println("Connection established......");
 	      //Creating a Statement object
 	      Statement stmt = con.createStatement();
 	      //Retrieving the data
