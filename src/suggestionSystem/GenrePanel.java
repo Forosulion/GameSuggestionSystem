@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
@@ -24,9 +25,12 @@ public class GenrePanel extends JPanel{
 	private JButton selectButton;
 	private JButton suggestButton;
 	private JList<String> gamesList;
+	private JList<String> suggestionsList;
+	
 	ResultSet rs;
 	ResultSet source;
 	private ArrayList<String> gamesStringList;
+	private ArrayList<String> suggestionStringList;
 	private static Map<String, Float> similarity_map = new HashMap<String, Float>();
 	
 	public GenrePanel() {
@@ -34,6 +38,12 @@ public class GenrePanel extends JPanel{
 		sql = new SQL_Handler();
 		sql2 = new SQL_Handler();
 		gamesStringList = new ArrayList<String>();
+		suggestionStringList = new ArrayList<String>();
+		
+		JLabel lblNewLabel = new JLabel("Games that similiar to your choice");
+		lblNewLabel.setBounds(500, 50, 306, 14);
+		this.add(lblNewLabel);
+		
 		
 		String[] genreChoices = { "Puzzle", "Race", "Simulation", "Shooter", "Role-playing", "Action-RPG" , "Survival", "Action" , "Action-Adventure" , "Adventure", "Strategy" , "Platformer" };
 	    genre_cb = new JComboBox<String>(genreChoices);
@@ -53,17 +63,25 @@ public class GenrePanel extends JPanel{
 	    this.add(passageoftime_cb);
 	    passageoftime_cb.setVisible(true);
 	    
+	    suggestionsList = new JList<String>();
+	    suggestionsList.setLayoutOrientation(JList.VERTICAL);
+	    suggestionsList.setBounds(500, 80, 200, 200);
+	    suggestionsList.setVisibleRowCount(10);
+	    suggestionsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    this.add(suggestionsList);
+	    suggestionsList.setVisible(true);
+	    
 	    gamesList = new JList<String>();
 	    gamesList.setLayoutOrientation(JList.VERTICAL);
-	    gamesList.setBounds(145, 80, 101, 200);
+	    gamesList.setBounds(70, 80, 200, 200);
 	    gamesList.setVisibleRowCount(10);
 	    gamesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	    this.add(gamesList);
 	    gamesList.setVisible(true);
 	    
 	    
-		selectButton = new JButton("EEEEEEE");
-		selectButton.setBounds(500, 52, 101, 23);
+		selectButton = new JButton("Filter Games");
+		selectButton.setBounds(350, 52, 101, 23);
 		this.add(selectButton);
 		
 		selectButton.addActionListener(new ActionListener() {
@@ -94,8 +112,8 @@ public class GenrePanel extends JPanel{
 		});
 		
 		
-		suggestButton = new JButton("AAAAAAA");
-		suggestButton.setBounds(500,150, 101, 23);
+		suggestButton = new JButton("Suggest Games!");
+		suggestButton.setBounds(300,150, 150, 23);
 		this.add(suggestButton);
 		
 		suggestButton.addActionListener(new ActionListener() {
@@ -158,11 +176,7 @@ public class GenrePanel extends JPanel{
 						timeSimilarity = 2 * ( 1 / Math.abs(averagePT - destAvg) );
 						similarity += timeSimilarity;
 						//System.out.println(rs.getString("Title") + Float.toString(tmpSim));
-						similarity_map.put(table.getString("Title"), similarity);
-						
-						
-						
-						
+						similarity_map.put(table.getString("Title"), similarity);							
 					}
 					
 				} catch (SQLException e21) {
@@ -175,10 +189,11 @@ public class GenrePanel extends JPanel{
 				
 				int list_size = sorted_list.size();
 				String[] list_arr = new String[list_size];
-				for(int i = list_size - 1; i > list_size - 6; i--) {
-					list_arr[list_size - 1 - i] = sorted_list.get(i).getKey();
+				for(int i = list_size - 2; i > list_size - 6; i--) {
+					list_arr[list_size - 2 - i] = sorted_list.get(i).getKey();
 				}				
-				sorted_list.forEach(System.out::println);
+				suggestionsList.setListData(list_arr);
+				
 			}
 		});
 	}
@@ -225,7 +240,6 @@ public class GenrePanel extends JPanel{
 		if(source.getString("Genre").equals(dest.getString("Genre"))) {
 			similarity += 5;
 		}
-		
 		
 		
 		if(source.getString("`Passage of Time`").equals(dest.getString("`Passage of Time"))) {
