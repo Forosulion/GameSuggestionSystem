@@ -81,7 +81,7 @@ public class GenrePanel extends JPanel{
 	    
 	    
 		selectButton = new JButton("Filter Games");
-		selectButton.setBounds(350, 52, 101, 23);
+		selectButton.setBounds(360, 52, 120, 23);
 		this.add(selectButton);
 		
 		selectButton.addActionListener(new ActionListener() {
