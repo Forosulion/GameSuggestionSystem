@@ -4,8 +4,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
@@ -80,7 +78,7 @@ public class SimilarityPanel extends JPanel {
 					+ "from usergamedata as table1, usergamedata as table2 "
 					+ "where table1.uid == " + user_id + " and table2.uid != table1.uid and table1.title == table2.title;");
 			
-			// Getting the necessarry data to calculate ratings.
+			// Getting the neccessarry data to calculate ratings.
 			RatingAdjuster.AddGameHoursByUID(user_id); 
 			//corr_gd_map.put(user_id, user_gd);
 			GameData curr_gd = null;

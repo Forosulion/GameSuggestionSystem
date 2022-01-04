@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import suggestionSystem.RatingAdjuster;
+
 public class GameData {
 	/**
 	 * Created seperately for each user.

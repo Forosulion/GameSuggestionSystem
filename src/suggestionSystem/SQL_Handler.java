@@ -9,7 +9,7 @@ import java.sql.Statement;
 import org.sqlite.JDBC;
 
 public class SQL_Handler {
-	public ResultSet table;
+	public ResultSet tablea;
 	private Connection connect(String path) {
         // SQLite connection string
         Connection conn = null;
@@ -27,7 +27,7 @@ public class SQL_Handler {
         try (Connection conn = this.connect(path);
         	Statement stmt  = conn.createStatement();
             ResultSet rs    = stmt.executeQuery(query)){
-            table = rs;
+            tablea = rs;
             // loop through the result set
             while (rs.next()) {
                 System.out.println(
@@ -50,6 +50,7 @@ public class SQL_Handler {
 	      Statement stmt = con.createStatement();
 	      //Retrieving the data
 	      ResultSet rs = stmt.executeQuery(query);
+	      tablea = rs;
 	      return rs;
 	   }
 	
