@@ -119,7 +119,7 @@ public class SimilarityPanel extends JPanel {
 			
 			// Now to predict the ratings for the selected user we need to get the union of all the games played by the users.
 			ResultSet allPlayedGamesRs = this.sql_handler.retrieveData("select distinct title from usergamedata where title not in (select t2.title from usergamedata as t2 where t2.uid == " + user_id + ")");
-			
+			// Calculate predictions
 			Map<String, Float> predictedRatings = new HashMap<String, Float>();
 			while(allPlayedGamesRs.next()) {
 				String gameTitle = allPlayedGamesRs.getString("title");
@@ -140,6 +140,7 @@ public class SimilarityPanel extends JPanel {
 					predictedRatings.put(gameTitle, predictedRating);
 				}
 			}
+			// Show predictions
 			ArrayList<Map.Entry<String, Float>> sorted_list = new ArrayList<>(predictedRatings.entrySet());
 			sorted_list.sort(Map.Entry.comparingByValue());
 			

@@ -158,7 +158,6 @@ public class GenrePanel extends JPanel{
 						float timeSimilarity;
 						float destAvg;
 						
-						
 						if(camera.equals(table.getString("Camera Perspective"))) {
 							similarity += 2;
 						}
