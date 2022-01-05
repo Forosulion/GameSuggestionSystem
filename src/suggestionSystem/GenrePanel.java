@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import suggestionSystem.SQL_Handler;
 
@@ -79,10 +80,13 @@ public class GenrePanel extends JPanel{
 	    this.add(gamesList);
 	    gamesList.setVisible(true);
 	    
-	    
 		selectButton = new JButton("Filter Games");
 		selectButton.setBounds(360, 52, 120, 23);
 		this.add(selectButton);
+		
+		JScrollPane scrollRoute = new JScrollPane(gamesList);
+		scrollRoute.setBounds(70, 80, 200, 200);
+		this.add(scrollRoute);	
 		
 		selectButton.addActionListener(new ActionListener() {
 			@Override
